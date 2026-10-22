@@ -5,7 +5,8 @@
 --  Carnet: 17-10684
 --
 --  Declaración de uso de herramientas de IA (obligatoria, ver enunciado):
---
+--  Gemini para preguntas teoricas sobre Haskell y etender la sintaxis y
+--  Copilot para explicaciones de errores y preguntas sobre compilación.
 -- =====================================================================
 --  No cambies el nombre del módulo ni la lista de exportación, ni las
 --  firmas de las funciones. Puedes agregar todas las funciones auxiliares
