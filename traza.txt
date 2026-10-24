@@ -23,3 +23,29 @@ foldr (-) 0 [0,6,8,4]
 -2
 
 (b)
+foldl (-) 0 [0,6,8,4]
+=
+foldl (-) (- 0 0) [6,8,4]
+=
+foldl (-) 0 [6,8,4]
+=
+foldl (-) (- 0 6) [8,4]
+=
+foldl (-) (-6) [8,4]
+=
+foldl (-) (- (-6) 8) [4]
+=
+foldl (-) (-14) [4]
+=
+foldl (-) (- (-14) 4) []
+=
+foldl (-) (-18) []
+=
+-18
+
+(d)
+Los resultados de (a) y (b) son distintons por el operador (-), el cual no es ni asociativo ni mucho menos
+conmutativo. Ahora la condicion necesaria para que coincidan solo requiere que el operador sea asociativo y que
+el valor inicial z sea exactamente el elemento neutro de la operacion (no importa la conmutatividad). Por ejemplo 
+(+) con valor inicial 0 lo cumple, pero con 1 ya dejaria de cumplirlo al ser que 0 es el neutro de la suma a 
+diferencia de cualquier otro numero.
