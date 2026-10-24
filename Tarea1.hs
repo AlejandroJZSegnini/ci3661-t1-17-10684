@@ -33,6 +33,12 @@ import Data.Char (isAlphaNum, isDigit, toLower, digitToInt)
 -- maximum, minimum, all, any y cualquier otra función de orden superior.
 -- =====================================================================
 
+
+-- A1
+esPalindromo :: String -> Bool
+esPalindromo [] = True
+esPalindromo xs = esPalindromoAux xs xs 0 (length xs)
+
 esPalindromoAux :: String -> String -> Int -> Int -> Bool
 esPalindromoAux xs ys i j
   | i >= j = True
@@ -41,17 +47,22 @@ esPalindromoAux xs ys i j
   | toLower (xs !! i) /= toLower (ys !! (j - 1)) = False
   | otherwise = esPalindromoAux xs ys (i + 1) (j - 1)
 
--- A1
-esPalindromo :: String -> Bool
-esPalindromo [] = True
-esPalindromo xs = esPalindromoAux xs xs 0 (length xs)
-
 -- A2
 -- Explica aquí, en dos o tres líneas, por qué tu solución recorre la
--- lista una sola vez:
---
+-- lista una sola vez: como usamos head y tail para recorrer la lista ((x:xs)),
+-- esta se recorre una sola vez, y al almacenar el máximo y mínimo en una tupla,
+-- no necesitamos recorrer la lista nuevamente para obtenerlos y comprar con la head actual (x).
 mayorYMenor :: Ord a => [a] -> Maybe (a, a)
-mayorYMenor = undefined
+mayorYMenor [] = Nothing
+mayorYMenor (x:xs) = mayorYMenorAux xs (x, x)
+
+mayorYMenorAux :: Ord a => [a] -> (a, a) -> Maybe (a, a)
+mayorYMenorAux [] (max, min) = Just (max, min)
+mayorYMenorAux (x:xs) (max, min)
+  | x > max = mayorYMenorAux xs (x, min)
+  | x < min = mayorYMenorAux xs (max, x)
+  | otherwise = mayorYMenorAux xs (max, min)
+
 
 -- A3
 leerHora :: String -> Either String (Int, Int)
