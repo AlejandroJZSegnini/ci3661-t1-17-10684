@@ -106,10 +106,18 @@ filtrarPromedio n xs = foldr filtrar (0.0, 0) xs
 
 -- B2
 movimientosCaballo :: (Int, Int) -> [(Int, Int)]
-movimientosCaballo = undefined
+movimientosCaballo (i, j) = 
+  [ (i + df, j + dc) -- Genera todas las combinaciones de movimientos posibles del caballo
+  | df <- [-2, -1, 1, 2], dc <- [-2, -1, 1, 2], abs df /= abs dc, -- Aseguramos movimiento de "L", nos movemos 2 en una dirección y 1 en la otra
+    i + df >= 1, i + df <= 8, j + dc >= 1, j + dc <= 8 ] -- Aseguramos que el movimiento esté dentro del tablero de ajedrez (1 a 8 para filas y columnas)
 
 enDosSaltos :: (Int, Int) -> Int
-enDosSaltos = undefined
+enDosSaltos (i, j) = length (foldr movimientosUnicos [] (movimientosCaballo (i, j)))
+  where
+    movimientosUnicos (i, j) acumulador =
+      let nuevosMovimientos = movimientosCaballo (i, j)
+          movimientosFiltrados = filter (`notElem` acumulador) nuevosMovimientos
+      in acumulador ++ movimientosFiltrados
 
 -- B3
 miMap :: (a -> b) -> [a] -> [b]
