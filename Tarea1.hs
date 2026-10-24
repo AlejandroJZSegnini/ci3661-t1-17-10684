@@ -6,7 +6,7 @@
 --
 --  Declaración de uso de herramientas de IA (obligatoria, ver enunciado):
 --  Gemini para preguntas teoricas sobre Haskell y etender la sintaxis y
---  Copilot para explicaciones de errores, preguntas sobre compilación.
+--  Copilot para explicaciones de errores y preguntas sobre compilación.
 -- =====================================================================
 --  No cambies el nombre del módulo ni la lista de exportación, ni las
 --  firmas de las funciones. Puedes agregar todas las funciones auxiliares
@@ -51,7 +51,7 @@ esPalindromoAux xs ys i j
 -- Explica aquí, en dos o tres líneas, por qué tu solución recorre la
 -- lista una sola vez: como usamos head y tail para recorrer la lista ((x:xs)),
 -- esta se recorre una sola vez, y al almacenar el máximo y mínimo en una tupla,
--- no necesitamos recorrer la lista nuevamente para obtenerlos y comprar con la head actual (x).
+-- no necesitamos recorrer la lista nuevamente para obtenerlos y comparar con la head actual (x).
 mayorYMenor :: Ord a => [a] -> Maybe (a, a)
 mayorYMenor [] = Nothing
 mayorYMenor (x:xs) = mayorYMenorAux xs (x, x)
@@ -66,10 +66,24 @@ mayorYMenorAux (x:xs) (max, min)
 
 -- A3
 leerHora :: String -> Either String (Int, Int)
-leerHora = undefined
+leerHora xs
+  | length xs /= 5 = Left "formato inválido" -- Verifica que el formato sea "hh:mm", es decir, que tenga 5 caracteres.
+  | xs !! 2 /= ':' = Left "formato inválido" -- Verifica que el tercer carácter sea ':', que es el separador entre horas y minutos.
+  | not (isDigit (xs !! 0) && isDigit (xs !! 1) && isDigit (xs !! 3) && isDigit (xs !! 4)) = Left "formato inválido" -- Verifica que los caracteres de horas y minutos sean dígitos.
+  | xs !! 0 > '2' = Left "hora fuera de rango" -- Caso de 30 o más horas, que no es válido.
+  | xs !! 0 == '2' && xs !! 1 > '3' = Left "hora fuera de rango" -- Caso de 24 a 29 horas, que no es válido.
+  | xs !! 3 > '5' = Left "minutos fuera de rango" -- Caso de 60 o más minutos, que no es válido.
+  | xs !! 0 > '2' && xs !! 1 > '3' && xs !! 3 > '5' = Right (digitToInt (xs !! 0) * 10 + digitToInt (xs !! 1), digitToInt (xs !! 3) * 10 + digitToInt (xs !! 4)) -- Reportar la hora si las horas y los minutos se salen de rango
+  | otherwise = Right (digitToInt (xs !! 0) * 10 + digitToInt (xs !! 1), digitToInt (xs !! 3) * 10 + digitToInt (xs !! 4))
 
 duracion :: String -> String -> Either String Int
-duracion = undefined
+duracion hora1 hora2 = 
+  case (leerHora hora1, leerHora hora2) of
+    (Left error, _) -> Left error -- Si hay errores, reportamos la primera hora que tenga un error.
+    (_, Left error) -> Left error
+    (Right (h1, m1), Right (h2, m2)) -> 
+      if h1 > h2 || (h1 == h2 && m1 > m2) then Right ((h2 + 24) * 60 + m2 - (h1 * 60 + m1)) -- Si la primera hora es mayor que la segunda, asumimos que la segunda hora es del día siguiente.
+      else Right (h2 * 60 + m2 - (h1 * 60 + m1)) -- Si la primera hora es menor o igual que la segunda, calculamos la diferencia en minutos.
 
 -- =====================================================================
 -- Parte B: orden superior.
