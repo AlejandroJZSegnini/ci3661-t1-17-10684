@@ -6,7 +6,7 @@
 --
 --  Declaración de uso de herramientas de IA (obligatoria, ver enunciado):
 --  Gemini para preguntas teoricas sobre Haskell y etender la sintaxis y
---  Copilot para explicaciones de errores y preguntas sobre compilación.
+--  Copilot para explicaciones de errores, preguntas sobre compilación.
 -- =====================================================================
 --  No cambies el nombre del módulo ni la lista de exportación, ni las
 --  firmas de las funciones. Puedes agregar todas las funciones auxiliares
@@ -33,9 +33,18 @@ import Data.Char (isAlphaNum, isDigit, toLower, digitToInt)
 -- maximum, minimum, all, any y cualquier otra función de orden superior.
 -- =====================================================================
 
+esPalindromoAux :: String -> String -> Int -> Int -> Bool
+esPalindromoAux xs ys i j
+  | i >= j = True
+  | not (isAlphaNum (xs !! i)) = esPalindromoAux xs ys (i + 1) j
+  | not (isAlphaNum (ys !! (j - 1))) = esPalindromoAux xs ys i (j - 1)
+  | toLower (xs !! i) /= toLower (ys !! (j - 1)) = False
+  | otherwise = esPalindromoAux xs ys (i + 1) (j - 1)
+
 -- A1
 esPalindromo :: String -> Bool
-esPalindromo = undefined
+esPalindromo [] = True
+esPalindromo xs = esPalindromoAux xs xs 0 (length xs)
 
 -- A2
 -- Explica aquí, en dos o tres líneas, por qué tu solución recorre la
