@@ -57,11 +57,11 @@ mayorYMenor [] = Nothing
 mayorYMenor (x:xs) = mayorYMenorAux xs (x, x)
 
 mayorYMenorAux :: Ord a => [a] -> (a, a) -> Maybe (a, a)
-mayorYMenorAux [] (max, min) = Just (max, min)
-mayorYMenorAux (x:xs) (max, min)
-  | x > max = mayorYMenorAux xs (x, min)
-  | x < min = mayorYMenorAux xs (max, x)
-  | otherwise = mayorYMenorAux xs (max, min)
+mayorYMenorAux [] (maximo, minimo) = Just (maximo, minimo)
+mayorYMenorAux (x:xs) (maximo, minimo)
+  | x > maximo = mayorYMenorAux xs (x, minimo)
+  | x < minimo = mayorYMenorAux xs (maximo, x)
+  | otherwise = mayorYMenorAux xs (maximo, minimo)
 
 
 -- A3
@@ -79,8 +79,8 @@ leerHora xs
 duracion :: String -> String -> Either String Int
 duracion hora1 hora2 = 
   case (leerHora hora1, leerHora hora2) of
-    (Left error, _) -> Left error -- Si hay errores, reportamos la primera hora que tenga un error.
-    (_, Left error) -> Left error
+    (Left err, _) -> Left err -- Si hay errores, reportamos la primera hora que tenga un error.
+    (_, Left err) -> Left err
     (Right (h1, m1), Right (h2, m2)) -> 
       if h1 > h2 || (h1 == h2 && m1 > m2) then Right ((h2 + 24) * 60 + m2 - (h1 * 60 + m1)) -- Si la primera hora es mayor que la segunda, asumimos que la segunda hora es del día siguiente.
       else Right (h2 * 60 + m2 - (h1 * 60 + m1)) -- Si la primera hora es menor o igual que la segunda, calculamos la diferencia en minutos.
@@ -106,24 +106,26 @@ filtrarPromedio n xs = foldr filtrar (0.0, 0) xs
 
 -- B2
 movimientosCaballo :: (Int, Int) -> [(Int, Int)]
-movimientosCaballo (i, j) = 
-  [ (i + df, j + dc) -- Genera todas las combinaciones de movimientos posibles del caballo
+movimientosCaballo (fila, columna) = 
+  [ (fila + df, columna + dc) -- Genera todas las combinaciones de movimientos posibles del caballo
   | df <- [-2, -1, 1, 2], dc <- [-2, -1, 1, 2], abs df /= abs dc, -- Aseguramos movimiento de "L", nos movemos 2 en una dirección y 1 en la otra
-    i + df >= 1, i + df <= 8, j + dc >= 1, j + dc <= 8 ] -- Aseguramos que el movimiento esté dentro del tablero de ajedrez (1 a 8 para filas y columnas)
+    fila + df >= 1, fila + df <= 8, columna + dc >= 1, columna + dc <= 8 ] -- Aseguramos que el movimiento esté dentro del tablero de ajedrez (1 a 8 para filas y columnas)
 
 enDosSaltos :: (Int, Int) -> Int
-enDosSaltos (i, j) = length (foldr movimientosUnicos [] (movimientosCaballo (i, j)))
+enDosSaltos (fila, columna) = length (foldr movimientosUnicos [] (movimientosCaballo (fila, columna)))
   where
-    movimientosUnicos (i, j) acumulador =
-      let nuevosMovimientos = movimientosCaballo (i, j)
+    movimientosUnicos (filaActual, columnaActual) acumulador =
+      let nuevosMovimientos = movimientosCaballo (filaActual, columnaActual)
           movimientosFiltrados = filter (`notElem` acumulador) nuevosMovimientos
       in acumulador ++ movimientosFiltrados
 
 -- B3
 miMap :: (a -> b) -> [a] -> [b]
+miMap _ [] = []
 miMap f (x:xs) = foldr (\y acc -> f y : acc) [] (x:xs)
 
 miFilter :: (a -> Bool) -> [a] -> [a]
+miFilter _ [] = []
 miFilter p (x:xs) = foldr (\y acc -> if p y then y : acc else acc) [] (x:xs)
 
 miFoldl :: (b -> a -> b) -> b -> [a] -> b
