@@ -121,10 +121,10 @@ enDosSaltos (i, j) = length (foldr movimientosUnicos [] (movimientosCaballo (i, 
 
 -- B3
 miMap :: (a -> b) -> [a] -> [b]
-miMap = undefined
+miMap f (x:xs) = foldr (\y acc -> f y : acc) [] (x:xs)
 
 miFilter :: (a -> Bool) -> [a] -> [a]
-miFilter = undefined
+miFilter p (x:xs) = foldr (\y acc -> if p y then y : acc else acc) [] (x:xs)
 
 miFoldl :: (b -> a -> b) -> b -> [a] -> b
 miFoldl = undefined
