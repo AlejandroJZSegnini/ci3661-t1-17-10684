@@ -93,7 +93,16 @@ duracion hora1 hora2 =
 
 -- B1
 promedioSobreUmbral :: Double -> [Double] -> Maybe Double
-promedioSobreUmbral = undefined
+promedioSobreUmbral n xs = 
+  let (suma, contador) = filtrarPromedio n xs
+  in if contador == 0 then Nothing else Just (suma / fromIntegral contador)
+
+filtrarPromedio :: Double -> [Double] -> (Double, Int)
+filtrarPromedio n xs = foldr filtrar (0.0, 0) xs
+  where
+    filtrar x (suma, contador)
+      | x > n = (suma + x, contador + 1)
+      | otherwise = (suma, contador)
 
 -- B2
 movimientosCaballo :: (Int, Int) -> [(Int, Int)]
